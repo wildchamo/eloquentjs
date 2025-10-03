@@ -26,15 +26,8 @@
 {
   // count how many B are in the string
   function countBs(string) {
-    let numberofBs = 0;
-
-    for (i = 0; i <= string.length; i++) {
-      if (string[i] === "B") {
-        numberofBs++;
-      }
-    }
-
-    return numberofBs;
+    const result = countCharacters(string, "B");
+    return result;
   }
 
   console.log(countBs("ABCBBBB"));
