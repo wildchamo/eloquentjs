@@ -289,6 +289,18 @@
     return table;
   }
 
+  function phi(table) {
+    return (
+      (table[3] * table[0] - table[2] * table[1]) /
+      Math.sqrt(
+        (table[2] + table[3]) *
+          (table[0] + table[1]) *
+          (table[1] + table[3]) *
+          (table[0] + table[2])
+      )
+    );
+  }
+
   const allEvents = [];
 
   for (let entry of JOURNAL) {
@@ -299,10 +311,13 @@
   const singularEvents = new Set(allEvents);
 
   for (let event of singularEvents) {
-    const generatedString = `event ${event}, correlation ${tableFor(
-      event,
-      JOURNAL
-    )} \n`;
-    console.log(generatedString);
+    const correlation = tableFor(event, JOURNAL);
+    const phiCorrelation = phi(correlation);
+    if (phiCorrelation > 0.1 || phiCorrelation < -0.1) {
+      const generatedString = `event ${event}, phi ${phiCorrelation} \n`;
+      console.log(generatedString);
+    }
   }
 }
+
+const newSet = new Set();
