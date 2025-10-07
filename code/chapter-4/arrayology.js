@@ -139,7 +139,7 @@
 }
 {
   function city(object) {
-    return object.address?.city;
+    return object.address?.city || "Unknown"; //forma correcta y mas segura
   }
 
   console.log(city({ address: { city: "Tunis" } }));
@@ -149,4 +149,18 @@
 {
   console.log("string".notAMethod?.());
   console.log({}.arrayProp?.[0]);
+}
+
+{
+  // json es data serializada
+  let jsonData = {
+    squirrel: false,
+    events: ["work", "touched tree", "pizza", "running", "television"],
+  };
+
+  let encodedJson = JSON.stringify(jsonData);
+
+  console.log(encodedJson);
+
+  console.log(JSON.parse(encodedJson));
 }
