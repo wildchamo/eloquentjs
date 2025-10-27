@@ -1899,4 +1899,70 @@ const passOnlyNames = passedWithArrayMethod.map((script) => script.name);
 
 let rtlScripts = SCRIPTS.filter((s) => s.direction === "rtl");
 
-console.log(map(rtlScripts, (s) => s.name));
+// console.log(map(rtlScripts, (s) => s.name));
+
+function reduce(array, combine, start) {
+  let current = start;
+
+  for (let element of array) {
+    current = combine(current, element);
+  }
+  return current;
+}
+
+// console.log(reduce([1, 2, 3, 4, 5], (a, b) => a + b, 0));
+
+// console.log([1, 2, 3, 4].reduce((a, b) => a + b));
+
+function characterCount(script) {
+  console.log("Script recibido:", script.name);
+
+  return script.ranges.reduce((count, [from, to]) => {
+    // Desestructuración: cada rango es un array [from, to]
+    console.log(`Procesando rango: ${from} - ${to}`);
+
+    const charsInRange = to - from; // Calcula caracteres en este rango
+    console.log(`Caracteres en rango: ${charsInRange}`);
+
+    const newCount = count + charsInRange; // Acumula el total
+    console.log(`Total acumulado: ${newCount}`);
+
+    return newCount;
+  }, 0); // Inicia el acumulador en 0
+}
+
+// console.log(
+//   SCRIPTS.reduce((a, b) => {
+//     return characterCount(a) < characterCount(b) ? b : a;
+//   })
+// );
+
+function average(array) {
+  return array.reduce((a, b) => a + b) / array.length;
+}
+
+const years = SCRIPTS.filter((s) => s.living).map((s) => s.year);
+
+const averageYear = average(years);
+const roundedYear = Math.round(averageYear);
+console.log(roundedYear);
+
+const notLivingYears = SCRIPTS.filter((s) => !s.living).map((s) => s.year);
+
+const averageNotLivingYears = Math.round(average(notLivingYears));
+
+console.log(averageNotLivingYears);
+
+{
+  let total = 0,
+    count = 0;
+
+  for (let script of SCRIPTS) {
+    if (script.living) {
+      total += script.year;
+      count += 1;
+    }
+  }
+
+  console.log(Math.round(total / count));
+}
