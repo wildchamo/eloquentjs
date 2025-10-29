@@ -16,3 +16,28 @@ function flatten(array) {
 }
 
 console.log(flatten(arrayOfArray));
+
+{
+  function loop(value, testFunction, updateFunction, bodyFunction) {
+    if (testFunction(value)) {
+      return console.log("condition achieved");
+    }
+
+    bodyFunction(value);
+    const updatedValue = updateFunction(value);
+    console.log(updatedValue);
+    return updatedValue;
+  }
+
+  function invokeLoop(value = 0) {
+    loop(
+      value,
+      (value) => value === 2,
+      (value) => value + 1,
+      (value) => console.log(value)
+    );
+  }
+
+  const initialValue = 0;
+  invokeLoop(initialValue);
+}
