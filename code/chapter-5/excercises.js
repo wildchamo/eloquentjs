@@ -43,3 +43,31 @@ console.log(flatten(arrayOfArray));
     }
   }
 }
+{
+  // everything
+
+  const testArray = [1, 2, 3, 5];
+
+  const testFunction = (x) => x < 6;
+  const isInEverything = everything2(testArray, testFunction);
+
+  console.log(isInEverything);
+
+  function everything(array, condition) {
+    for (i = 0; i < array.length; i++) {
+      const value = array[i];
+
+      const accomplishCondition = condition(value);
+
+      // console.log(accomplishCondition);
+      if (!accomplishCondition) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function everything2(array, condition) {
+    return !array.some((number) => !condition(number));
+  }
+}
