@@ -150,3 +150,17 @@ Array.prototype.forEach.call(
   },
   (elt) => console.log(elt)
 );
+
+let varyingSize = {
+  get size() {
+    return Math.floor(Math.random() * 100);
+  },
+};
+
+console.log(varyingSize.size);
+
+class Temperature {
+  constructor(celsius) {
+    this.celsius = celsius;
+  }
+}
