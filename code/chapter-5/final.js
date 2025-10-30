@@ -1872,116 +1872,32 @@ var SCRIPTS = [
     link: "https://en.wikipedia.org/wiki/Mongolian_writing_systems#Horizontal_square_script",
   },
 ];
-
-function filter(array, test) {
-  let passed = [];
-  for (let element of array) {
-    if (test(element)) {
-      passed.push(element);
-    }
-  }
-  return passed;
-}
-
-const passedLangs = filter(SCRIPTS, (script) => script.living);
-
-const passedWithArrayMethod = SCRIPTS.filter((script) => script.living);
-
-function map(array, transform) {
-  let mapped = [];
-  for (let element of array) {
-    mapped.push(transform(element));
-  }
-  return mapped;
-}
-
-const passOnlyNames = passedWithArrayMethod.map((script) => script.name);
-
-let rtlScripts = SCRIPTS.filter((s) => s.direction === "rtl");
-
-// console.log(map(rtlScripts, (s) => s.name));
-
-function reduce(array, combine, start) {
-  let current = start;
-
-  for (let element of array) {
-    current = combine(current, element);
-  }
-  return current;
-}
-
-// console.log(reduce([1, 2, 3, 4, 5], (a, b) => a + b, 0));
-
-console.log([1, 2, 3, 4].reduce((a, b) => a + b));
-
-function characterCount(script) {
-  console.log("Script recibido:", script.name);
-
-  return script.ranges.reduce((count, [from, to]) => {
-    // Desestructuración: cada rango es un array [from, to]
-    console.log(`Procesando rango: ${from} - ${to}`);
-
-    const charsInRange = to - from; // Calcula caracteres en este rango
-    console.log(`Caracteres en rango: ${charsInRange}`);
-
-    const newCount = count + charsInRange; // Acumula el total
-    console.log(`Total acumulado: ${newCount}`);
-
-    return newCount;
-  }, 0); // Inicia el acumulador en 0
-}
-
-// console.log(
-//   SCRIPTS.reduce((a, b) => {
-//     return characterCount(a) < characterCount(b) ? b : a;
-//   })
-// );
-
-function average(array) {
-  return array.reduce((a, b) => a + b) / array.length;
-}
-
-const years = SCRIPTS.filter((s) => s.living).map((s) => s.year);
-
-const averageYear = average(years);
-const roundedYear = Math.round(averageYear);
-console.log(roundedYear);
-
-const notLivingYears = SCRIPTS.filter((s) => !s.living).map((s) => s.year);
-
-const averageNotLivingYears = Math.round(average(notLivingYears));
-
-console.log(averageNotLivingYears);
-
-{
-  let total = 0,
-    count = 0;
-
+function characterScript(code) {
   for (let script of SCRIPTS) {
-    if (script.living) {
-      total += script.year;
-      count += 1;
+    if (
+      script.ranges.some(([from, to]) => {
+        return code >= from && code < to;
+      })
+    ) {
+      return script;
+    }
+  }
+  return null;
+}
+
+function countBy(items, groupName) {
+  let counts = [];
+
+  for (let item of items) {
+    let name = groupName(item);
+    let known = counts.find((c) => c.name == name);
+    if (!known) {
+      counts.push({ name, count: 1 });
+    } else {
+      known.count++;
     }
   }
 
-  console.log(Math.round(total / count));
+  return counts;
 }
-
-console.log(countBy([1, 2, 3, 4, 5], (n) => n > 2));
-
-function textScripts(text) {
-  let scripts = countBy(text, (char) => {
-    let script = characterScript(char.codePointAt(0));
-    return script ? script.name : "none";
-  }).filter(({ name }) => name != "none");
-
-  let total = scripts.reduce((n, { count }) => n + count, 0);
-  if (total == 0) return "No scripts found";
-
-  return scripts.map(({ name, count }) => ({
-    name,
-    percent: (count * 100) / total,
-  }));
-}
-
-console.log(textScripts('英国的狗说"woof", 俄罗斯的狗说"тяв"'));
+function getDominantWritingDirection(text) {}
