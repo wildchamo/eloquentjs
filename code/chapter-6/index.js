@@ -135,3 +135,9 @@ console.log(randomSource.getNumber());
   killerRabbit.teeth = "long, sharp";
   console.log(killerRabbit.teeth);
 }
+
+console.log(String(killerRabbit));
+Rabbit.prototype.toString = function () {
+  return `a ${this.type} rabbit`;
+};
+console.log(String(killerRabbit));
