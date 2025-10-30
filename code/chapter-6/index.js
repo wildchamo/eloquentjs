@@ -141,3 +141,12 @@ Rabbit.prototype.toString = function () {
   return `a ${this.type} rabbit`;
 };
 console.log(String(killerRabbit));
+
+Array.prototype.forEach.call(
+  {
+    length: 2,
+    0: "A",
+    1: "B",
+  },
+  (elt) => console.log(elt)
+);
