@@ -163,4 +163,100 @@ class Temperature {
   constructor(celsius) {
     this.celsius = celsius;
   }
+
+  get fahrenheit() {
+    return this.celsius * 1.8 + 32;
+  }
+
+  set fahrenheit(value) {
+    this.celsius = (value - 32) / 1.8;
+  }
+
+  static fromFahrenheit(value) {
+    return new Temperature((value - 32) / 1.8);
+  }
 }
+
+let temp = new Temperature(22);
+console.log(temp.fahrenheit);
+
+temp.fahrenheit = 86;
+console.log(temp.celsius);
+
+let boil = Temperature.fromFahrenheit(212);
+console.log(boil.celsius);
+
+let sym = Symbol("name");
+
+let sym2 = Symbol("name");
+console.log(sym === sym2);
+
+const length = Symbol("length");
+Array.prototype[length] = 150;
+
+console.log([1, 2, 3][length]);
+console.log([1, 2, 3].length);
+
+let okIterator = "OK"[Symbol.iterator]();
+
+console.log(okIterator.next());
+console.log(okIterator.next());
+console.log(okIterator.next());
+
+class List {
+  constructor(value, rest) {
+    this.value = value;
+    this.rest = rest;
+  }
+
+  get length() {
+    return 1 + (this.rest ? this.rest.length : 0);
+  }
+
+  static fromArray(array) {
+    let result = null;
+    for (let i = array.length - 1; i >= 0; i--) {
+      result = new this(array[i], result);
+    }
+    return result;
+  }
+}
+
+class ListIterator {
+  constructor(list) {
+    this.list = list;
+  }
+  next() {
+    if (this.list == null) {
+      return { done: true };
+    }
+    let value = this.list.value;
+    this.list = this.list.rest;
+    return { done: false, value };
+  }
+}
+
+List.prototype[Symbol.iterator] = function () {
+  return new ListIterator(this);
+};
+
+let list = List.fromArray([1, 2, 3]);
+
+for (let element of list) {
+  console.log(element);
+}
+
+class LengthList extends List {
+  #length;
+
+  constructor(value, rest) {
+    super(value, rest);
+    this.#length = super.length;
+  }
+
+  get length() {
+    return this.#length;
+  }
+}
+
+console.log(LengthList.fromArray([1, 2, 3, 5, 4, 5, 6, 6, 6, 6]).length);
