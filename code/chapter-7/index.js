@@ -76,7 +76,7 @@ function runRobot(state, robot, memory) {
   for (let turn = 0; ; turn++) {
     if (state.parcels.length == 0) {
       console.log("Done in " + turn);
-      break;
+      return turn;
     }
     let action = robot(state, memory);
     state = state.move(action.direction);
@@ -155,3 +155,45 @@ function findRoute(graph, from, to) {
     }
   }
 }
+
+function goalOrientedRobot({ place, parcels }, route) {
+  if (route.length == 0) {
+    let parcel = parcels[0];
+    if (parcel.place != place) {
+      route = findRoute(roadGraph, place, parcel.place);
+    } else {
+      route = findRoute(roadGraph, place, parcel.address);
+    }
+  }
+  return { direction: route[0], memory: route.slice(1) };
+}
+
+// console.log(runRobot(VillageState.random(), goalOrientedRobot, []));
+
+function compareRobots(robot1, robot2, initialMemory = []) {
+  let score1 = 0;
+  let score2 = 0;
+  let draws = 0;
+  for (let i = 0; i < 100; i++) {
+    const tasksForTwo = VillageState.random();
+    const firstRobotResult = runRobot(tasksForTwo, robot1, initialMemory);
+    const secondRobotResult = runRobot(tasksForTwo, robot2, initialMemory);
+
+    console.log(firstRobotResult, secondRobotResult);
+
+    if (firstRobotResult === secondRobotResult) {
+      draws += 1;
+    }
+    if (firstRobotResult < secondRobotResult) {
+      score1 += 1;
+    }
+    if (firstRobotResult > secondRobotResult) {
+      score2 += 1;
+    }
+  }
+  console.log("score for the first robot " + score1);
+  console.log("score for the second robot " + score2);
+  console.log("draws " + draws);
+}
+
+compareRobots(routeRobot, goalOrientedRobot);
