@@ -83,3 +83,71 @@ try {
   console.log("Something went wrong", e.message);
   console.log(e.stack);
 }
+{
+  const accounts = {
+    a: 100,
+    b: 0,
+    c: 20,
+  };
+
+  function getAccount() {
+    let accountName = "a";
+    if (!Object.hasOwn(accounts, accountName)) {
+      throw new Error(`No such account: ${accountName}`);
+    }
+    return accountName;
+  }
+
+  function transfer(from, amount) {
+    if (accounts[from] < amount) return;
+    accounts[from] -= amount;
+    accounts[getAccount()] += amount;
+  }
+
+  function transfer2(from, amount) {
+    if (accounts[from] < amount) return;
+    let progress = 0;
+
+    try {
+      accounts[from] -= amount;
+      progress = 1;
+      accounts[getAccount()] += amount;
+      progress = 2;
+    } finally {
+      if (progress == 1) {
+        accounts[from] += amount;
+      }
+    }
+  }
+}
+
+class InputError extends Error {}
+for (;;) {
+  try {
+    let dir = promptDirection(); // ← Typo!
+    console.log("You chose ", dir);
+    break;
+  } catch (e) {
+    if (e instanceof InputError) {
+      console.log("Not a valid direction. Try again.");
+    } else {
+      throw e;
+    }
+  }
+}
+
+function promptDirection(question) {
+  let result = "A";
+  if (result.toLowerCase() == "left") return "L";
+  if (result.toLowerCase() == "right") return "R";
+
+  throw new InputError("Invalid direction: " + result);
+}
+{
+  function firstElement(array) {
+    if (array.length == 0) {
+      throw new Error("empty array");
+    }
+    return array[0];
+  }
+}
